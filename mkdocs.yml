@@ -1,0 +1,29 @@
+site_name: 'Your Pkg Name'
+repo_url: Your Github repo url
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - content.code.select
+    - toc.follow
+    - navigation.top
+    - navigation.tabs
+    - navigation.tracking
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+extra:
+  version:
+    provider: mike
+
+# Navigation ordering
+plugins:
+  - literate-nav:
+      nav_file: NAV.md
