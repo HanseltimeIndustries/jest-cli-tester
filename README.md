@@ -342,6 +342,26 @@ describe('something', () => {
   })
 })
 ```
+
+### Normal exiting or process.exitCode exiting
+
+If your CLI script does no explicitly call process.exit() and relies on exiting normally, a `CLIRunner` will return either:
+
+1. null if we finished the script with no process.exitCode set
+2. `"<code>"` if process.exitCode was set
+
+When asserting for this, you would do something like:
+
+```typescript
+  it('should finish normally', async () => {
+    expect(await cliRunner.run(myCLIScript, ['--org', '20923045', 'fufufufuf'])).toBe(null);
+  })
+
+  it('should finish with exitCode', async () => {
+    expect(await cliRunner.run(myCLIScript, ['--org', '20923045', 'fufufufuf'])).toBe("33");
+  })
+```
+
 # Developing
 
 See [Development](./DEVELOPMENT.md)
