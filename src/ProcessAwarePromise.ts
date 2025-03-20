@@ -1,6 +1,5 @@
 import { AsyncLocalStorage } from "async_hooks";
 import { ParentPool } from "./ParentPool";
-import { error } from "console";
 
 // We use asyncLocal Storage to track succession of promises, this will allow us to detect if we need to reject an upper promise
 // maybe...
@@ -40,11 +39,19 @@ export class ProcessAwarePromise<T> extends Promise<T> {
 	static idx = 0;
 	static parentPool = new ParentPool<PromiseInfo>((_id, state) => {
 		if (!state.result) {
-			throw new Error(`We are in a state where we aren't rejecting id ${_id} even though all references are gone.`);
+			throw new Error(
+				`We are in a state where we aren't rejecting id ${_id} even though all references are gone.`,
+			);
 		}
 	});
 	static transferTimers: Set<NodeJS.Timeout> = new Set();
-	static from: "await-then" | "then" | "catch" | "yield-then" | "finally" | undefined;
+	static from:
+		| "await-then"
+		| "then"
+		| "catch"
+		| "yield-then"
+		| "finally"
+		| undefined;
 	transferTimer: NodeJS.Timeout;
 	f: any = "placeholder";
 	/**
@@ -54,9 +61,6 @@ export class ProcessAwarePromise<T> extends Promise<T> {
 	constructor(executor: (res: (r: T) => void, rej: (e: any) => void) => void) {
 		const isAwait = ProcessAwarePromise.from === "await-then";
 		const isAsyncGenerator = ProcessAwarePromise.from === "yield-then";
-		const isCatch = ProcessAwarePromise.from === "catch";
-		const isThen = ProcessAwarePromise.from === "then";
-		const handler = ProcessAwarePromise.fromHandler ?? executor;
 		const isConstructorCall = ProcessAwarePromise.from === undefined;
 		const thisIdx = `${ProcessAwarePromise.idx++}`;
 		// Make sure to claim above parents so that then contexts can drop their claims
@@ -66,56 +70,69 @@ export class ProcessAwarePromise<T> extends Promise<T> {
 				ProcessAwarePromise.parentPool.claimParent(parentId, thisIdx);
 			});
 		}
-		const actualExecutor = isAwait || isAsyncGenerator ? executor : (_res: (r: T) => void, _rej: (e: any) => void) => {
-				asyncLocalStorage.run(createAsyncTree(thisIdx), () => {
-					const res = (v: any) => {
-						// First drop ourselves from the parentPool - but maybe our children won't let us die
-						ProcessAwarePromise.parentPool.tryDropSelf(thisIdx);
-						// There must be child claims so update state
-						if (ProcessAwarePromise.parentPool.has(thisIdx)) {
-							ProcessAwarePromise.parentPool.getParentState(thisIdx).result =
-								"resolved";
-						}
-						_res(v);
-					};
-					const rej = (reason: any) => {
-						// TODO: release any parents above this
-						// First drop ourselves from the parentPool - but maybe our children won't let us die
-						ProcessAwarePromise.parentPool.tryDropSelf(thisIdx);
-						// There must be child claims so update state
-						if (ProcessAwarePromise.parentPool.has(thisIdx)) {
-							ProcessAwarePromise.parentPool.getParentState(thisIdx).result =
-								"rejected";
-						}
-						_rej(reason);
-					};
-					ProcessAwarePromise.parentPool.createParent(thisIdx, {
-						reject: rej,
-						syncExit: false,
-						result: undefined,
-					});
+		const actualExecutor =
+			isAwait || isAsyncGenerator
+				? executor
+				: (_res: (r: T) => void, _rej: (e: any) => void) => {
+						asyncLocalStorage.run(createAsyncTree(thisIdx), () => {
+							const res = (v: any) => {
+								// First drop ourselves from the parentPool - but maybe our children won't let us die
+								ProcessAwarePromise.parentPool.tryDropSelf(thisIdx);
+								// There must be child claims so update state
+								if (ProcessAwarePromise.parentPool.has(thisIdx)) {
+									ProcessAwarePromise.parentPool.getParentState(
+										thisIdx,
+									).result = "resolved";
+								}
+								_res(v);
+							};
+							const rej = (reason: any) => {
+								// TODO: release any parents above this
+								// First drop ourselves from the parentPool - but maybe our children won't let us die
+								ProcessAwarePromise.parentPool.tryDropSelf(thisIdx);
+								// There must be child claims so update state
+								if (ProcessAwarePromise.parentPool.has(thisIdx)) {
+									ProcessAwarePromise.parentPool.getParentState(
+										thisIdx,
+									).result = "rejected";
+								}
+								_rej(reason);
+							};
+							ProcessAwarePromise.parentPool.createParent(thisIdx, {
+								reject: rej,
+								syncExit: false,
+								result: undefined,
+							});
 
-					try {
-						executor(res, rej);
-					} catch (e) {
-						if (isConstructorCall) {
-							// We need to make sure the Error rejects this promise
-							if (ProcessAwarePromise.processExitError) {
-								rej(ProcessAwarePromise.getProcessExitError(e as Error));
-								return;
+							try {
+								// The then functions have this wrapped at a higher level because doing it down here messes with super wrapping code
+								// We still need this behavior for new Promises being created
+								if (isConstructorCall && ProcessAwarePromise.processExitError) {
+									throw ProcessAwarePromise.getProcessExitError(
+										ProcessAwarePromise.processExitError,
+									);
+								}
+								executor(res, rej);
+							} catch (e) {
+								if (isConstructorCall) {
+									// We need to make sure the Error rejects this promise
+									if (ProcessAwarePromise.processExitError) {
+										rej(ProcessAwarePromise.getProcessExitError(e as Error));
+										return;
+									}
+								}
+								throw e;
+							} finally {
+								// Set our sync exit so children can know they can't throw explicitly
+								// May be empty if we called rej/res inline before the executor exited and no children claimed it
+								if (ProcessAwarePromise.parentPool.has(thisIdx)) {
+									ProcessAwarePromise.parentPool.getParentState(
+										thisIdx,
+									).syncExit = true;
+								}
 							}
-						}
-						throw e;
-					} finally {
-						// Set our sync exit so children can know they can't throw explicitly
-						// May be empty if we called rej/res inline before the executor exited and no children claimed it
-						if (ProcessAwarePromise.parentPool.has(thisIdx)) {
-							ProcessAwarePromise.parentPool.getParentState(thisIdx).syncExit =
-								true;
-						}
-					}
-				});
-		};
+						});
+					};
 		super(actualExecutor);
 		this.selfParentId = thisIdx;
 		// I don't like that this isn't definitive, but we can't account for every promise state, this gives us a buffer for then() calls.
@@ -123,7 +140,7 @@ export class ProcessAwarePromise<T> extends Promise<T> {
 			this.releaseParentClaims();
 			ProcessAwarePromise.transferTimers.delete(this.transferTimer);
 		}, MAX_TIME_BETWEEN_THEN);
-		ProcessAwarePromise.transferTimers.add(this.transferTimer)
+		ProcessAwarePromise.transferTimers.add(this.transferTimer);
 
 		this.f = executor;
 	}
@@ -148,7 +165,7 @@ export class ProcessAwarePromise<T> extends Promise<T> {
 			| null
 			| undefined,
 	): Promise<TResult1 | TResult2> {
-		ProcessAwarePromise.fromHandler = onfulfilled
+		ProcessAwarePromise.fromHandler = onfulfilled;
 		// Make sure the transferTimer is stopped since we want to transfer ownership here
 		clearTimeout(this.transferTimer);
 		const isAwait = onfulfilled?.toString()?.includes("[native code]");
@@ -168,27 +185,35 @@ export class ProcessAwarePromise<T> extends Promise<T> {
 			return super.then(onfulfilled, onrejected);
 		}
 
-		const onfulfilledFull = onfulfilled ? (v: T) => {
-			try {
-				if (ProcessAwarePromise.processExitError) {
-					throw ProcessAwarePromise.getProcessExitError(ProcessAwarePromise.processExitError);
+		const onfulfilledFull = onfulfilled
+			? (v: T) => {
+					try {
+						if (ProcessAwarePromise.processExitError) {
+							throw ProcessAwarePromise.getProcessExitError(
+								ProcessAwarePromise.processExitError,
+							);
+						}
+						return onfulfilled(v);
+					} catch (e) {
+						ProcessAwarePromise.handleThenableCatch(e as Error);
+					}
 				}
-				return onfulfilled(v);
-			} catch (e) {
-				ProcessAwarePromise.handleThenableCatch(e as Error);
-			}
-		} : onfulfilled;
+			: onfulfilled;
 
-		const onrejectedFull = onrejected ? (r: any) => {
-			try {
-				if (ProcessAwarePromise.processExitError) {
-					throw ProcessAwarePromise.getProcessExitError(ProcessAwarePromise.processExitError);
+		const onrejectedFull = onrejected
+			? (r: any) => {
+					try {
+						if (ProcessAwarePromise.processExitError) {
+							throw ProcessAwarePromise.getProcessExitError(
+								ProcessAwarePromise.processExitError,
+							);
+						}
+						return onrejected?.(r);
+					} catch (e) {
+						ProcessAwarePromise.handleThenableCatch(e as Error);
+					}
 				}
-				return onrejected?.(r);
-			} catch (e) {
-				ProcessAwarePromise.handleThenableCatch(e as Error);
-			}
-		} : onrejected;
+			: onrejected;
 
 		const promise = super.then(onfulfilledFull, onrejectedFull);
 		// Remove our claim to our parents since we have transferred it within the then() promise creation
@@ -270,5 +295,4 @@ export class ProcessAwarePromise<T> extends Promise<T> {
 		ProcessAwarePromise.parentPool.clear();
 		ProcessAwarePromise.idx = 0;
 	}
-
 }

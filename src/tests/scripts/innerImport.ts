@@ -5,7 +5,7 @@ export async function innerImport(fail: boolean) {
 		if (fail) {
 			process.exit(1);
 		}
-	} catch (err) {
+	} catch (_err) {
 		console.log("this is me eating an error");
 	}
 }

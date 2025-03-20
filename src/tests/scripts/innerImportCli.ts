@@ -2,6 +2,8 @@
 // @CLITestTransform
 /**
  * Simple script for simulating an async CLI script
+ * TODO - this is not implemented yet given the additional overhead.  Feel free to enable the test that uses this
+ *     and contribute the feature for transformation.
  */
 
 import { ArgumentParser } from "argparse";
@@ -27,7 +29,7 @@ async function main() {
 	});
 	try {
 		innerImport(args.fail === "true");
-	} catch (err) {
+	} catch (_err) {
 		console.log("another catch");
 	}
 }

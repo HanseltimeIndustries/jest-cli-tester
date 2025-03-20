@@ -34,7 +34,7 @@ module.exports = {
 						{
 							cliScripts: [
 								// asyncCLIScript does not have the specific comment
-								new RegExp(".*src\/tests\/scripts\/asyncCLIScript.[jt]s"),
+								new RegExp(".*src/tests/scripts/asyncCLIScript.[jt]s"),
 								//,
 							],
 							ecmaVersion: getEcmaVersionFromTsConfig(testTSConfig),

@@ -8,13 +8,8 @@ declare let console: Console;
 interface RunHelper {
 	/**
 	 * This should be called at the front of every catch and finally block, it will propagate the stubbed error to the top
-	 *
-	 * If this is a promise context, the rej function is called and true is returned to mean there was a rejection
-	 * @param rej
 	 */
-	handleProcessExitCatchFinally(
-		rej?: (e: Error | string | unknown) => void,
-	): boolean;
+	handleProcessExitCatchFinally(): boolean;
 }
 
 // The Expected module that we get from cliTransformer
@@ -106,7 +101,7 @@ export class CLIRunner {
 
 		// Helper functions for calling in try-catches (TO BE Done still in the transformer)
 		const cliRunHelper = {
-			handleProcessExitCatchFinally(rej?: (input: any) => void) {
+			handleProcessExitCatchFinally() {
 				if (processExitErr) {
 					throw processExitErr;
 				}
@@ -197,6 +192,7 @@ export class CLIRunner {
 				}
 				(global as any).___cli_run_helper = cliRunHelper;
 				global.Promise = ProcessAwarePromise<any> as any;
+				console.log(`${mod.run}`);
 				await mod!.run(cliRunHelper);
 				global.Promise = origPromise;
 				(global as any).___cli_run_helper = cliRunHelper;
@@ -216,7 +212,7 @@ export class CLIRunner {
 		} finally {
 			process.exit = oldExit;
 			process.abort = oldAbort;
-			ProcessAwarePromise.clearProcessExit();
+			ProcessAwarePromise.clear();
 			process.env = oldEnv;
 			process.stdout.write = stdoutWrite;
 			process.stderr.write = stdErrWrite;

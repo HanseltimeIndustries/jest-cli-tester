@@ -39,14 +39,13 @@ import type {
 	FunctionExpression,
 	Identifier,
 	MemberExpression,
-	NewExpression,
 	Node,
 	SourceLocation,
 	TryStatement,
 	UnaryExpression,
 } from "acorn";
 import { parse } from "acorn";
-import { ancestor, simple } from "acorn-walk";
+import { simple } from "acorn-walk";
 import { fromComment } from "convert-source-map";
 import { decode, encode } from "vlq";
 import createCacheKeyFunction from "@jest/create-cache-key-function";
@@ -396,8 +395,8 @@ function wrapCLIVoidPromises(
 		});
 
 		// Find all try-catches to allow process.exit and abort to pass through
-		ancestor(prog, {
-			TryStatement: (node: TryStatement, _state: unknown, ancestors) => {
+		simple(prog, {
+			TryStatement: (node: TryStatement, _state: unknown) => {
 				// The typings here don't seem to make sense to me. Our TryStatement
 				// doesn't match that of acorn.
 				const cast = node;

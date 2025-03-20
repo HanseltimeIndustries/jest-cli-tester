@@ -6,7 +6,7 @@ export class ParentPool<S, Id = string> {
 			state: S;
 		}
 	>();
-	private onParentDelete?: (id: Id, state: S) => void
+	private onParentDelete?: (id: Id, state: S) => void;
 
 	constructor(onParentDelete?: (id: Id, state: S) => void) {
 		this.onParentDelete = onParentDelete;

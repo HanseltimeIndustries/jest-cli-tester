@@ -34,13 +34,14 @@ describe.each([
 		throwProcessErrors: runHasThrowSetting,
 	});
 	const asyncScript = require.resolve("./scripts/asyncCLIScript");
-	const innerImportScript = require.resolve("./scripts/innerImportCli");
+	// const innerImportScript = require.resolve("./scripts/innerImportCli");
 	const nonTransformedScript = require.resolve("./scripts/notTransformed");
 	const commentTransformedScript = require.resolve(
 		"./scripts/transformByComment",
 	);
 	const catchTransformedScript = require.resolve("./scripts/catchTransforms");
 	const voidOnLastLineScript = require.resolve("./scripts/voidOnLastLine");
+	// TODO - enable this when we set up transformations for non-entrypoint files
 	// fit("works for nested process.exit", async () => {
 	// 	await checkForExit(
 	// 		async () => {

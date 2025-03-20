@@ -2,7 +2,7 @@
 const arg = process.argv[2];
 
 async function main() {
-	await new Promise<void>((res, rej) => {
+	await new Promise<void>((res, _rej) => {
 		setTimeout(() => {
 			res();
 		});

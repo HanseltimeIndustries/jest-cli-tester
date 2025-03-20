@@ -1,9 +1,9 @@
 # CLI Script Tester
 
 CLI Script Tester exists for running Jest against script files that have been written to not have module.exports.
-This is not just a wrapper that calls spawn and has a limited ability to influence the script. This is a transformer
-that will make it so that you can run your script in the jest process with mocks and hooks that track how the process was supposed
-to exit.
+This is not just a wrapper that calls spawn and has a limited ability to influence the script. This is a combination of transformer
+and script wrapper that will make it so that you can run your script in the jest process with mocks and hooks that track how the 
+process was supposed to exit.
 
 ## Simple Example
 
@@ -51,7 +51,6 @@ module.exports = {
               tsconfig: TS_CONFIG,
             }
           ],
-          // Use the cliTransformer that should have been transpiled before this call
           [
             '@hanseltime/jest-cli-tester/transform',
             {
@@ -85,7 +84,7 @@ it('logs', () => {
 
 ## How it works
 
-At a high-level, this library uses a transformer to wrap any cli script files that are required by the CLIRunner into a module
+At a high-level, this library uses a transformer to wrap any cli script entrypoint files that are required by the CLIRunner into a module
 with specific exports.
 
 1. Jest Transform process
@@ -93,14 +92,19 @@ with specific exports.
    2. `<Your normal transformer>` is called first to generate transformed javascript
    3. `@hanseltime/jest-cli-tester/transform` is called
       1. The file name is evaluated against the `cliScripts` option or the src is searched for `// @CLITestTransform` at the top
-      2. If the file is a match from above, the transform inserts a module wrapper + hooks for running the file into source
+      2. If the file is a match from above, the transform inserts:
+         1. a module wrapper + hooks for running the file into source
+         2. a "throw any process exit errors" function call in any catches
 
-2. During a test, a script run is done by:
+2. During a test, a script run involves:
    1. Declaring a CLIRunner that keeps track of hooks for standard process calls
    2. Passing the resolved path of the script to load
    3. Loading the resolved path and all of its dependencies in isolation (i.e. `jest.isolateModules`)
       1. The load triggers the above transform process
-   4. The loaded module is then run via it's wrapping function and the result is reported back from `run()`
+   4. Providing global functions for Promises, process.exit(), and process.argv that allow us to track process.exit calls
+   5. The loaded module is then run via it's wrapping function and the result is reported back from `run()`
+   
+If you would like more nuanced notes on some of the system, see [Design](./DESIGN.md).
 
 ## Installation
 
@@ -114,7 +118,7 @@ yarn add --dev jest-chain-transform @hanseltime/jest-cli-test ts-jest
 yarn add --dev jest-chain-transform @hanseltime/jest-cli-test
 ```
 
-Once you have installed the correct pacakages, you will need to update your jest config file (we recommend using a .js or .ts file), to chain transforms:
+Once you have installed the correct packages, you will need to update your jest config file (we recommend using a .js config file), to chain transforms:
 
 If using ts-jest:
 
@@ -135,7 +139,6 @@ module.exports = {
               tsconfig: TS_CONFIG,
             }
           ],
-          // Use the cliTransformer that should have been transpiled before this call
           [
             '@hanseltime/jest-cli-tester/transform',
             {
@@ -171,7 +174,6 @@ module.exports = {
               comments: true,
             }
           ],
-          // Use the cliTransformer that should have been transpiled before this call
           [
             '@hanseltime/jest-cli-tester/transform',
             {
@@ -254,18 +256,30 @@ reads them from comments in the source code provided.
 
 ## Usage Discussion
 
-The core concept behind this library is the CLIRunner. It essentially preps your cli script as a node.js module for execution (and wraps it into a module export with the transformer so that it can run it in the jest context). TODO: ts-jest compliance.
+The core concept behind this library is the CLIRunner. It essentially preps your cli script as a node.js module for execution (and wraps it into a module export with the transformer so that it can run it in the jest context).
 
 You can create a number of CLIRunner instances for the sake of having particular tester configurations. Note, every run will reset the module loading of the test so that we can re-run just like a fresh load (but mocks will be preserved :D).
 
-CLIRunner will stub out different non-standard script returns:
+CLIRunner will stub out different non-standard process returns:
 
 - process.exit()
 - process.abort()
 
-The returns will be thrown as an error. (Don't worry! We inject a handler into each catch and finally block so that these specific messages are thrown through).
+The returns will be thrown as an error. (Don't worry! We inject a handler into each catch and finally block in the entrypoint file so that these specific messages are thrown through).
 
 The error messages are the equivalent to a call to the same process function.
+
+### Known process.exit limitation
+
+The current state of the CLI transformer is that it only performs the correct transform to throw `process.exit()` calls through catches
+within the entrypoint script. So if you would like to test importing some function that calls `process.exit` within any catches or finally's,
+you will get erratic behavior.
+
+In general, it's a bad idea to have a non-entrypoint script perform a process.exit, so it feels like a fair compromise to reqeust that
+the developer makes sure to propagate errors from imported files to 
+the top-level and then call process.exit() there.
+
+If you would like to test a process.exit in imported files, please submit an issue to this repository, detailing your case.
 
 ### The throwProcessErrors option
 
@@ -328,17 +342,6 @@ describe('something', () => {
   })
 })
 ```
+# Developing
 
-# Testing this project
-
-If you would like to test this project, we provide different `test:<conf>` scripts to do so.
-
-Note, you will want to make sure that you have run `yarn build` so that we can use the transformer
-that was compiled.
-
-```shell
-yarn build
-yarn test:ts-jest
-yarn test:babel-jest
-# Any others that we may add
-```
+See [Development](./DEVELOPMENT.md)

@@ -33,13 +33,14 @@ async function main() {
 		}).finally(() => process.exit());
 	} else if (args.fail === "exitInPromise") {
 		console.log("exitInPromise");
-			await new Promise<void>((res) => {
-				if (true) {
-					// Pretend this was some switch condition
-					process.exit(12);
-				}
-				res();
-			});
+		await new Promise<void>((res) => {
+			// biome-ignore lint: we are simulating this condition with always true
+			if (true) {
+				// Pretend this was some switch condition
+				process.exit(12);
+			}
+			res();
+		});
 	} else {
 		console.log("Success!");
 	}
