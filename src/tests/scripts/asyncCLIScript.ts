@@ -41,6 +41,42 @@ async function main() {
 			}
 			res();
 		});
+	} else if (args.fail === "exitInTimeout") {
+		console.log("exitInTimeout");
+		await new Promise<void>((res) => {
+			setTimeout(() => {
+				// biome-ignore lint: we are simulating this condition with always true
+				if (true) {
+					process.exit(22);
+				}
+				res();
+			}, 100);
+		});
+	} else if (args.fail === "exitInInterval") {
+		console.log("exitInInterval");
+		await new Promise<void>((res) => {
+			let idx = 0;
+			setInterval(() => {
+				idx++;
+				if (idx == 4) {
+					process.exit(33);
+				} else if ( idx == 5) {
+					// Simulate never getting here
+					res();
+				}
+			}, 10);
+		});
+	} else if (args.fail === "exitInImmediate") {
+		console.log("exitInImmediate");
+		await new Promise<void>((res) => {
+			setImmediate(() => {
+				// biome-ignore lint: we are simulating this condition with always true
+				if (true) {
+					process.exit(33);
+				}
+				res();
+			});
+		});
 	} else {
 		console.log("Success!");
 	}

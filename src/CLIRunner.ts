@@ -1,6 +1,7 @@
 import { createStrictStub } from "./createStrictStub";
 import { mockCliCall } from "./mockCliCall";
-import { ProcessAwarePromise } from "./ProcessAwarePromise";
+import { ProcessAwarePromiseFactory } from "./ProcessAwarePromise";
+import { ProcessAwareTimers } from "./ProcessAwareTimers";
 
 declare let console: Console;
 
@@ -75,11 +76,20 @@ export class CLIRunner {
 	async run(cliModuleUrl: string, args: string[] = []): Promise<string | null> {
 		const oldExit = process.exit;
 		let processExitErr: Error | undefined;
+		const origPromise = Promise;
+		const origSetTimeout = global.setTimeout;
+		const origSetInterval = global.setInterval;
+		const origClearInterval = global.clearInterval;
+		const origSetImmediate = global.setImmediate;
+		const promiseFactory = new ProcessAwarePromiseFactory(origSetTimeout)
+		const timers = new ProcessAwareTimers(promiseFactory, origSetTimeout, origSetInterval, origClearInterval, origSetImmediate);
+
 		const mockExit = (code: number) => {
 			// If we encounter cascading process.exit() preserve the first one since that is how a real exit looks
 			if (processExitErr) throw processExitErr;
 			processExitErr = new Error(`process.exit(${code ?? ""})`);
-			ProcessAwarePromise.setProcessExit(processExitErr);
+			promiseFactory.setProcessExit(processExitErr);
+			timers.setProcessExitError(processExitErr);
 			throw processExitErr;
 		};
 		process.exit = mockExit as (code: number) => never;
@@ -87,7 +97,8 @@ export class CLIRunner {
 		const mockAbort = () => {
 			if (processExitErr) throw processExitErr;
 			processExitErr = new Error("process.abort()");
-			ProcessAwarePromise.setProcessExit(processExitErr);
+			promiseFactory.setProcessExit(processExitErr);
+			timers.setProcessExitError(processExitErr);
 			throw processExitErr;
 		};
 		process.abort = mockAbort;
@@ -113,7 +124,6 @@ export class CLIRunner {
 		let error: unknown | undefined;
 		// Messages for replay after reverting console.log
 		let toStdMessages: { to: "out" | "err"; msg: string }[] = [];
-		const origPromise = Promise;
 		try {
 			// Let require run with new arguments
 			await mockCliCall(args, async () => {
@@ -191,15 +201,27 @@ export class CLIRunner {
 					);
 				}
 				(global as any).___cli_run_helper = cliRunHelper;
-				global.Promise = ProcessAwarePromise<any> as any;
-				console.log(`${mod.run}`);
+				global.Promise = promiseFactory.makePromiseClass();
+				(global as any).setTimeout = timers.makeSetTimeout();
+				const intervalFuncs = timers.makeIntervalFuncs();
+				(global as any).setInterval = intervalFuncs.setInterval;
+				(global as any).clearInterval = intervalFuncs.clearInterval;
+				(global as any).setImmediate = timers.makeSetImmediate();
 				await mod!.run(cliRunHelper);
 				global.Promise = origPromise;
+				global.setTimeout = origSetTimeout;
+				global.setInterval = origSetInterval;
+				global.clearInterval = origClearInterval;
+				global.setImmediate = origSetImmediate;
 				(global as any).___cli_run_helper = cliRunHelper;
 			});
 			return null;
 		} catch (err) {
 			global.Promise = origPromise;
+			global.setTimeout = origSetTimeout;
+			global.setInterval = origSetInterval;
+			global.clearInterval = origClearInterval;
+			global.setImmediate = origSetImmediate;
 			if (err !== processExitErr) {
 				// Log the error to the current console as if it hit stdErr
 				console.error(err);
@@ -212,7 +234,8 @@ export class CLIRunner {
 		} finally {
 			process.exit = oldExit;
 			process.abort = oldAbort;
-			ProcessAwarePromise.clear();
+			timers.clear();
+			promiseFactory.clear();
 			process.env = oldEnv;
 			process.stdout.write = stdoutWrite;
 			process.stderr.write = stdErrWrite;

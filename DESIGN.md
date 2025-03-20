@@ -159,6 +159,29 @@ flowchart TD
     K --> U("run() catches and handles error")
 ```
 
+### Handling global timers
+
+Another common pattern that applications can use is to write some timeout and wrap it in a Promise that gets resolved.  In general,
+if you are calling process.exit() within these, you already have a non-cleaned up end of program state.  We expect that you have at least
+tried awaiting these timers so that you don't have dangling processes.
+
+With that assumption in mind, our handling of timers is:
+
+```mermaid
+flowchart TD
+    A("throw process.exit() error in timer") --> B(wrapping catch)
+    B --> C{is process exit error?}
+    C -->|yes| W{"has above unresolved promise?"}
+    W -->|yes| X(reject above promise)
+    W -->|no| Y
+    X --> Y{is interval?}
+    Y -->|yes| Z(clearInterval)
+    Z --> AA
+    Y -->|no| AA(return)
+    C -->|no| D(rethrow error)
+
+```
+
 ### Known edge cases
 
 The entirety of the process.exit() calls within a Promise is, to put it lightly, a slog.

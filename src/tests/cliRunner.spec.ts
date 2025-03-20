@@ -52,6 +52,36 @@ describe.each([
 	// 	);
 	// 	expect(mockLogFn).toHaveBeenCalledWith("Failure");
 	// });
+	it("works for void main exitInTimeout", async () => {
+		await checkForExit(
+			async () => {
+				return await cliRunner.run(asyncScript, ["--fail", "exitInTimeout"]);
+			},
+			"process.exit(22)",
+			runHasThrowSetting,
+		);
+		expect(mockLogFn).toHaveBeenCalledWith("exitInTimeout");
+	});
+	it("works for void main exitInInterval", async () => {
+		await checkForExit(
+			async () => {
+				return await cliRunner.run(asyncScript, ["--fail", "exitInInterval"]);
+			},
+			"process.exit(33)",
+			runHasThrowSetting,
+		);
+		expect(mockLogFn).toHaveBeenCalledWith("exitInInterval");
+	});
+	it("works for void main exitInImmediate", async () => {
+		await checkForExit(
+			async () => {
+				return await cliRunner.run(asyncScript, ["--fail", "exitInImmediate"]);
+			},
+			"process.exit(33)",
+			runHasThrowSetting,
+		);
+		expect(mockLogFn).toHaveBeenCalledWith("exitInImmediate");
+	});
 	it("works for void main finallyCatch", async () => {
 		await checkForExit(
 			async () => {

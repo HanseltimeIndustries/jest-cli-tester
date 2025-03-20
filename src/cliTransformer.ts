@@ -411,7 +411,6 @@ function wrapCLIVoidPromises(
 
 		return moduleWrap(src, prog, sourceMapIndex, voidExpression, catchInserts);
 	}
-	console.log(tree.type);
 	// For whatever reason we didn't look up a program
 	return src;
 }
@@ -447,7 +446,6 @@ const cliTransformerFactory: {
 				filename: string,
 				_fullOpts?: TransformOptions<CLITransformerOptions>, // covered by the factory
 			): TransformedSource {
-				console.log(filename + " tranformed");
 				return {
 					code: wrapCLIVoidPromises(src, filename, opts),
 				};
