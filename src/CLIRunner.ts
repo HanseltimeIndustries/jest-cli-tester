@@ -81,9 +81,18 @@ export class CLIRunner {
 		const origSetInterval = global.setInterval;
 		const origClearInterval = global.clearInterval;
 		const origSetImmediate = global.setImmediate;
-		const originalExitCodeDescriptor = Object.getOwnPropertyDescriptor(process, 'exitCode')!;
-		const promiseFactory = new ProcessAwarePromiseFactory(origSetTimeout)
-		const timers = new ProcessAwareTimers(promiseFactory, origSetTimeout, origSetInterval, origClearInterval, origSetImmediate);
+		const originalExitCodeDescriptor = Object.getOwnPropertyDescriptor(
+			process,
+			"exitCode",
+		)!;
+		const promiseFactory = new ProcessAwarePromiseFactory(origSetTimeout);
+		const timers = new ProcessAwareTimers(
+			promiseFactory,
+			origSetTimeout,
+			origSetInterval,
+			origClearInterval,
+			origSetImmediate,
+		);
 
 		let mockExitCode: string = "";
 		const mockExit = (code: number) => {
@@ -210,13 +219,13 @@ export class CLIRunner {
 				(global as any).clearInterval = intervalFuncs.clearInterval;
 				(global as any).setImmediate = timers.makeSetImmediate();
 				// Override the setter for process.exitCode
-				Object.defineProperty(process, 'exitCode', {
-					set: function(value) {
+				Object.defineProperty(process, "exitCode", {
+					set: function (value) {
 						mockExitCode = `${value}`;
 					},
-					get: function() {
+					get: function () {
 						return mockExitCode || undefined;
-					}
+					},
 				});
 				await mod!.run(cliRunHelper);
 				global.Promise = origPromise;
@@ -224,7 +233,7 @@ export class CLIRunner {
 				global.setInterval = origSetInterval;
 				global.clearInterval = origClearInterval;
 				global.setImmediate = origSetImmediate;
-				Object.defineProperty(process, 'exitCode', originalExitCodeDescriptor);
+				Object.defineProperty(process, "exitCode", originalExitCodeDescriptor);
 				(global as any).___cli_run_helper = cliRunHelper;
 			});
 			return mockExitCode || null;
@@ -234,13 +243,16 @@ export class CLIRunner {
 			global.setInterval = origSetInterval;
 			global.clearInterval = origClearInterval;
 			global.setImmediate = origSetImmediate;
-			Object.defineProperty(process, 'exitCode', originalExitCodeDescriptor);
+			Object.defineProperty(process, "exitCode", originalExitCodeDescriptor);
 			if (err !== processExitErr) {
 				// Log the error to the current console as if it hit stdErr
 				console.error(err);
 			}
 			// Compare messages since debugging may replay the error from promises, etc.
-			if (!this.throwProcessErrors && (err as Error).message === processExitErr?.message) {
+			if (
+				!this.throwProcessErrors &&
+				(err as Error).message === processExitErr?.message
+			) {
 				return processExitErr!.message;
 			}
 			error = err;

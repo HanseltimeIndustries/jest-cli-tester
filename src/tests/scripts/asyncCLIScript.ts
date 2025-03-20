@@ -60,7 +60,7 @@ async function main() {
 				idx++;
 				if (idx == 4) {
 					process.exit(33);
-				} else if ( idx == 5) {
+				} else if (idx == 5) {
 					// Simulate never getting here
 					res();
 				}

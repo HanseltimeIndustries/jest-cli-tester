@@ -1,3 +1,3 @@
-it('is an example test', () => {
-  // TODO: remove this test
-})
+it("is an example test", () => {
+	// TODO: remove this test
+});

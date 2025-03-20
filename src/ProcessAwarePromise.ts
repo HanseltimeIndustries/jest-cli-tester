@@ -26,9 +26,7 @@ export class ProcessAwarePromiseFactory {
 	private processExitError: Error | undefined;
 	setProcessExit(e: Error) {
 		if (this.processExitError) {
-			throw new Error(
-				"We already set processExitError!",
-			);
+			throw new Error("We already set processExitError!");
 		}
 		this.processExitError = e;
 	}
@@ -46,13 +44,7 @@ export class ProcessAwarePromiseFactory {
 	transferTimers: Set<NodeJS.Timeout> = new Set();
 	// We need un-throwable setTimeout since we are organizing additional process.exit behavior
 	origSetTimeout: typeof setTimeout;
-	from:
-				| "await-then"
-				| "then"
-				| "catch"
-				| "yield-then"
-				| "finally"
-				| undefined;
+	from: "await-then" | "then" | "catch" | "yield-then" | "finally" | undefined;
 
 	constructor(origSetTimeout: typeof setTimeout) {
 		this.origSetTimeout = origSetTimeout;
@@ -60,13 +52,18 @@ export class ProcessAwarePromiseFactory {
 
 	makePromiseClass() {
 		const factoryInstance = this;
-		return class <T> extends Promise<T> {
+		return class<T> extends Promise<T> {
 			transferTimer: NodeJS.Timeout;
 			/**
 			 * The id of this promise as a parent in the parent pool
 			 */
 			selfParentId: string;
-			constructor(executor: (res: (r: T | PromiseLike<T>) => void, rej: (e: any) => void) => void) {
+			constructor(
+				executor: (
+					res: (r: T | PromiseLike<T>) => void,
+					rej: (e: any) => void,
+				) => void,
+			) {
 				const isAwait = factoryInstance.from === "await-then";
 				const isAsyncGenerator = factoryInstance.from === "yield-then";
 				const isConstructorCall = factoryInstance.from === undefined;
@@ -111,7 +108,7 @@ export class ProcessAwarePromiseFactory {
 										syncExit: false,
 										result: undefined,
 									});
-		
+
 									try {
 										// The then functions have this wrapped at a higher level because doing it down here messes with super wrapping code
 										// We still need this behavior for new Promises being created
@@ -184,12 +181,12 @@ export class ProcessAwarePromiseFactory {
 							? "yield-then"
 							: "then";
 				}
-		
+
 				// Do not modify await promises or things break
 				if (isAwait || isAsyncGenerator) {
 					return super.then(onfulfilled, onrejected);
 				}
-		
+
 				const onfulfilledFull = onfulfilled
 					? (v: T) => {
 							try {
@@ -204,7 +201,7 @@ export class ProcessAwarePromiseFactory {
 							}
 						}
 					: onfulfilled;
-		
+
 				const onrejectedFull = onrejected
 					? (r: any) => {
 							try {
@@ -219,7 +216,7 @@ export class ProcessAwarePromiseFactory {
 							}
 						}
 					: onrejected;
-		
+
 				const promise = super.then(onfulfilledFull, onrejectedFull);
 				// Remove our claim to our parents since we have transferred it within the then() promise creation
 				this.releaseParentClaims();
@@ -239,7 +236,7 @@ export class ProcessAwarePromiseFactory {
 				factoryInstance.from = undefined;
 				return promise;
 			}
-		
+
 			releaseParentClaims() {
 				const parentChain = asyncLocalStorage.getStore() as string | undefined;
 				if (parentChain) {
@@ -248,13 +245,11 @@ export class ProcessAwarePromiseFactory {
 					});
 				}
 			}
-		}
+		};
 	}
 
 	private getProcessExitError(e: Error) {
-		return PROCESS_EXIT_DEBUG
-			? new Error(e.message)
-			: this.processExitError;
+		return PROCESS_EXIT_DEBUG ? new Error(e.message) : this.processExitError;
 	}
 
 	/**
@@ -274,10 +269,7 @@ export class ProcessAwarePromiseFactory {
 	}
 
 	private handleThenableCatch(e: Error) {
-		if (
-			this.processExitError &&
-			e.message === this.processExitError.message
-		) {
+		if (this.processExitError && e.message === this.processExitError.message) {
 			const parentChain = asyncLocalStorage.getStore() as string | undefined;
 			// We're at the top level, we only know how to throw since there's no detectable reject()
 			if (!parentChain) {
@@ -285,8 +277,7 @@ export class ProcessAwarePromiseFactory {
 			}
 
 			const nextParentId = parentChain.split(".")[0];
-			const nextParent =
-				this.parentPool.getParentState(nextParentId);
+			const nextParent = this.parentPool.getParentState(nextParentId);
 
 			if (nextParent.syncExit) {
 				if (nextParent.result) {

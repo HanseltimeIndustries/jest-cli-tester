@@ -12,7 +12,7 @@ parser.add_argument("--yay", {
 parser.add_argument("--code", {
 	type: String,
 	required: false,
-})
+});
 
 let args: {
 	yay: string;

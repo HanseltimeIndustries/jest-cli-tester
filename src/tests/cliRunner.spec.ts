@@ -135,12 +135,14 @@ describe.each([
 		expect(mockLogFn).toHaveBeenCalledWith("Here we are! yahoo");
 	});
 	it("works for scripts with the @ClITestTransform and exitCode", async () => {
-		expect(await cliRunner.run(commentTransformedScript, [
-					"--yay",
-					"yahoo",
-					"--code",
-					"24"
-				])).toEqual('24');
+		expect(
+			await cliRunner.run(commentTransformedScript, [
+				"--yay",
+				"yahoo",
+				"--code",
+				"24",
+			]),
+		).toEqual("24");
 		expect(mockLogFn).toHaveBeenCalledWith("Here we are! yahoo");
 	});
 	it("works with promise catch process exit", async () => {
