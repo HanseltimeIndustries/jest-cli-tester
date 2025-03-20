@@ -51,6 +51,16 @@ describe.each([
 	// 	);
 	// 	expect(mockLogFn).toHaveBeenCalledWith("Failure");
 	// });
+	it("works for void main finallyCatch", async () => {
+		await checkForExit(
+			async () => {
+				return await cliRunner.run(asyncScript, ["--fail", "finallyCatch"]);
+			},
+			"process.exit()",
+			runHasThrowSetting,
+		);
+		expect(mockLogFn).toHaveBeenCalledWith("finallyCatch");
+	});
 	it("works for void main failure", async () => {
 		await checkForExit(
 			async () => {
@@ -161,5 +171,15 @@ describe.each([
 		await expect(async () => {
 			return await cliRunner.run("not-a-module", ["--fail", "true"]);
 		}).rejects.toThrow(`Cannot find module 'not-a-module' from '${file}'`);
+	});
+	it("works for void main exitInPromise", async () => {
+		await checkForExit(
+			async () => {
+				return await cliRunner.run(asyncScript, ["--fail", "exitInPromise"]);
+			},
+			"process.exit(12)",
+			runHasThrowSetting,
+		);
+		expect(mockLogFn).toHaveBeenCalledWith("exitInPromise");
 	});
 });
