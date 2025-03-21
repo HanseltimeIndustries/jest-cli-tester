@@ -50,7 +50,10 @@ import { fromComment } from "convert-source-map";
 import { decode, encode } from "vlq";
 import createCacheKeyFunction from "@jest/create-cache-key-function";
 
-type ScriptPaths = string | RegExp;
+/**
+ * The string can be a RegExp string
+ */
+type ScriptPaths = string;
 
 interface CLITransformerOptions {
 	/**
@@ -107,10 +110,7 @@ function getRegexArr(options: CLITransformerOptions) {
 		if (typeof scriptMatch === "string") {
 			return new RegExp(scriptMatch);
 		}
-		if (scriptMatch instanceof RegExp) {
-			return scriptMatch;
-		}
-		throw new Error(`${JSON.stringify(scriptMatch)} must be a valid regex`);
+		throw new Error(`${JSON.stringify(scriptMatch)} must be a valid regex string`);
 	});
 
 	return regexArr;

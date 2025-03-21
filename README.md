@@ -236,7 +236,8 @@ module.exports = {
             {
               ecmaVersion: getEcmaVersionFromTsConfig(TS_CONFIG),
               cliScripts: [
-                /.*\/src\/bin\/my-bin-file.ts/
+                // IMPORTANT - you need a string if you are going to run with more than 1 worker
+                /.*\/src\/bin\/my-bin-file.ts/.source
               ]
             }
           ]

@@ -29,7 +29,7 @@ module.exports = {
 						{
 							cliScripts: [
 								// asyncCLIScript does not have the specific comment
-								/.*src\/tests\/scripts\/asyncCLIScript.[jt]s/,
+								/.*src\/tests\/scripts\/asyncCLIScript.[jt]s/.source,
 							],
 							ecmaVersion: getEcmaVersionFromTsConfig(testTSConfig),
 						},
@@ -51,7 +51,7 @@ module.exports = {
 						{
 							cliScripts: [
 								// asyncCLIScript does not have the specific comment
-								/.*src\/tests\/scripts\/asyncCLIScript.[jt]s/,
+								/.*src\/tests\/scripts\/asyncCLIScript.[jt]s/.source,
 							],
 							ecmaVersion: getEcmaVersionFromTsConfig(testTSConfig),
 						},
