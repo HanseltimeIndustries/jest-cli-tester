@@ -80,13 +80,9 @@ jobs:
           npm install --force -g corepack@>=0.31.0
           corepack enable
           yarn install --immutable
-      - name: Restore dist
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            dist/
-          key: dist2-${{ github.sha }}
-          enableCrossOsArchive: true
+      - name: build
+        run: |
+          yarn build
       - id: pkgtest-setup
         uses: hanseltimeindustries/pkgtest-setup-action@v1
       - name: pkgtest ${{ matrix.pkgManager }}
