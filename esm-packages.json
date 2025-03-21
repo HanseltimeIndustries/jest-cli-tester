@@ -1,6 +1,7 @@
 {
     "description": "This is a programmatically created file via get-esm-packages -p yarnv2+ -r --file esm-packages.json --quiet",
     "packages": [
+        "@gerrit0/mini-shiki",
         "@inquirer/checkbox",
         "@inquirer/confirm",
         "@inquirer/core",
@@ -18,6 +19,9 @@
         "@sec-ant/readable-stream",
         "@semantic-release/error",
         "@semantic-release/exec",
+        "@shikijs/engine-oniguruma",
+        "@shikijs/types",
+        "@shikijs/vscode-textmate",
         "@sindresorhus/is",
         "@sindresorhus/merge-streams",
         "@szmarczak/http-timer",
@@ -78,6 +82,8 @@
         "strtok3",
         "token-types",
         "tsx",
+        "typedoc",
+        "typedoc-plugin-markdown",
         "uint8array-extras",
         "unicorn-magic",
         "vlq",

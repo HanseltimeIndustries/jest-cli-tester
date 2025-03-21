@@ -185,7 +185,7 @@ flowchart TD
 ### Known edge cases
 
 The entirety of the process.exit() calls within a Promise is, to put it lightly, a slog.
-The current tests within [asyncCliScript.ts](./src/tests/scripts/asyncCLIScript.ts), show guaranteed patterns for process.exit to work.  However, if you are doing exotic interdependent promise rejection, you may run into issues because process.exit() is not able
+The current tests within `src/tests/scripts/asyncCLIScript.ts`, show guaranteed patterns for process.exit to work.  However, if you are doing exotic interdependent promise rejection, you may run into issues because process.exit() is not able
 to reject all promises via errors:
 
 ```typescript
