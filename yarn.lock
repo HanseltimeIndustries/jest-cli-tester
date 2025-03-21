@@ -861,16 +861,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hanseltime/esm-interop-tools@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@hanseltime/esm-interop-tools@npm:1.0.2"
+"@hanseltime/esm-interop-tools@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@hanseltime/esm-interop-tools@npm:1.0.3"
   dependencies:
     "@semantic-release/exec": ^7.0.3
     commander: ^12.1.0
     resolve-package-path: ^4.0.3
+    systeminformation: ^5.25.11
   bin:
     get-esm-packages: dist/esm/bin/get-esm-packages.mjs
-  checksum: f08c1edc12873a7e9f3cb5a01a42ef6736a802bf2505f075c8c21a57b680a88b81787df150ebd56d0f042ee8a45d22796659fa78aeebd242ae5484ff02cb6bc4
+  checksum: beb7b2aa181a39f0969712a31c9ea35222eb3601b9d1757056b27799d69af7a102ccaf80c1a265b7a18ce60e7a6ba262c1d2da72bf96d40a83bfa3a50ca4af2d
   languageName: node
   linkType: hard
 
@@ -880,7 +881,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": 1.9.4
     "@commitlint/config-angular": ^18.4.3
-    "@hanseltime/esm-interop-tools": ^1.0.2
+    "@hanseltime/esm-interop-tools": ^1.0.3
     "@hanseltime/pkgtest": ^1.3.0
     "@hanseltime/swc-plugin-node-globals-inject": ^1.0.0
     "@jest/create-cache-key-function": ^29.7.0
@@ -6337,6 +6338,16 @@ __metadata:
   version: 1.0.0
   resolution: "supports-preserve-symlinks-flag@npm:1.0.0"
   checksum: 53b1e247e68e05db7b3808b99b892bd36fb096e6fba213a06da7fab22045e97597db425c724f2bbd6c99a3c295e1e73f3e4de78592289f38431049e1277ca0ae
+  languageName: node
+  linkType: hard
+
+"systeminformation@npm:^5.25.11":
+  version: 5.25.11
+  resolution: "systeminformation@npm:5.25.11"
+  bin:
+    systeminformation: lib/cli.js
+  checksum: 4cee19bff31456f6e777fa165eebb16623d9b911b2ce89dd8157a3eb700f356b8c746dd16fe86d9d5855c654d3f947b30c49122819a206eb8ca750d8290c1f18
+  conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
 
