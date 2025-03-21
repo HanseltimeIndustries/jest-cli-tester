@@ -110,7 +110,9 @@ function getRegexArr(options: CLITransformerOptions) {
 		if (typeof scriptMatch === "string") {
 			return new RegExp(scriptMatch);
 		}
-		throw new Error(`${JSON.stringify(scriptMatch)} must be a valid regex string`);
+		throw new Error(
+			`${JSON.stringify(scriptMatch)} must be a valid regex string`,
+		);
 	});
 
 	return regexArr;

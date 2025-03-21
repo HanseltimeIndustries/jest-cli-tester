@@ -70,9 +70,12 @@
 				"useValidTypeof": "error"
 			}
 		},
-		"ignore": [".yarn/**/*", "dist/**/*", "node_modules/**/*"]
+		"ignore": [".yarn/**/*", "dist/**/*", "node_modules/**/*", "tmp/**/*"]
 	},
-	"javascript": { "formatter": { "quoteStyle": "double" } },
+	"javascript": {
+		"formatter": { "quoteStyle": "double" },
+		"globals": ["jest"]
+	},
 	"overrides": [
 		{
 			"include": [
