@@ -50,6 +50,13 @@ const esmProjects = {
 	additionalFiles: ["fixtures/esm/"],
 	moduleTypes: ["esm"],
 };
+// For whatever reason, the CI ubuntu runner with v20 fails to module detect with yarn berry
+// This does not happen on local linux for me so we'll just skip it on CI
+if (process.env.CI_FIX === "true") {
+	esmProjects.packageManagers = esmProjects.packageManagers.filter(
+		(p) => p !== "yarn-berry",
+	);
+}
 
 module.exports = {
 	rootDir: "pkgtest",

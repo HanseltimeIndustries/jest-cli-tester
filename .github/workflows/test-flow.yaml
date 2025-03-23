@@ -86,6 +86,8 @@ jobs:
       - id: pkgtest-setup
         uses: hanseltimeindustries/pkgtest-setup-action@v1
       - name: pkgtest ${{ matrix.pkgManager }}
+        env:
+          CI_FIX: "true"
         run: |
           # This avoids yarnv1 level failures due to global cache lock issues
           # Just preps by filling the cache in a synchronous manner
