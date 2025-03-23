@@ -97,7 +97,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pkgtest-log-files-${{ matrix.pkgManager }}-${{ matrix.os }}-${{ matrix.node-version }}
-          path: ${{ steps.pkgtest-setup.outputs.collet_log_file_folder }}
+          path: ${{ steps.pkgtest-setup.outputs.collect_log_file_folder }}
           retention-days: 1
           include-hidden-files: true
   ensure-docs:
