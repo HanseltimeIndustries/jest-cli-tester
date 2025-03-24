@@ -1,0 +1,1247 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="Contributing/">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.2">
+    
+    
+      
+        <title>Jest CLI Tester</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.d7758b05.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#jest-cli-script-tester" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Jest CLI Tester" class="md-header__button md-logo" aria-label="Jest CLI Tester" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Jest CLI Tester
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/HanseltimeIndustries/jest-cli-tester" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="Contributing/" class="md-tabs__link">
+          
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="api/" class="md-tabs__link">
+          
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Jest CLI Tester" class="md-nav__button md-logo" aria-label="Jest CLI Tester" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Jest CLI Tester
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/HanseltimeIndustries/jest-cli-tester" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#simple-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How it works
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#marking-your-bin-files-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Marking your bin files for testing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Marking your bin files for testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-annotated-comment-preferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 Annotated Comment (Preferred)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-regex-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 Regex configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-map-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source Map support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-discussion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Discussion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Discussion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#known-processexit-limitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Known process.exit limitation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-throwprocesserrors-option" class="md-nav__link">
+    <span class="md-ellipsis">
+      The throwProcessErrors option
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-throwprocesserrors-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      $ Example (throwProcessErrors = false):
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-throwprocesserrors-true" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example (throwProcessErrors = true):
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normal-exiting-or-processexitcode-exiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Normal exiting or process.exitCode exiting
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Index
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Classes
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Classes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/classes/CLIRunner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLIRunner
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Functions
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Functions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/functions/getEcmaVersionFromTsConfig/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    getEcmaVersionFromTsConfig
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#simple-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How it works
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#marking-your-bin-files-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Marking your bin files for testing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Marking your bin files for testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-annotated-comment-preferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 Annotated Comment (Preferred)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-regex-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 Regex configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-map-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source Map support
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-discussion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Discussion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Discussion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#known-processexit-limitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Known process.exit limitation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-throwprocesserrors-option" class="md-nav__link">
+    <span class="md-ellipsis">
+      The throwProcessErrors option
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-throwprocesserrors-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      $ Example (throwProcessErrors = false):
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-throwprocesserrors-true" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example (throwProcessErrors = true):
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#normal-exiting-or-processexitcode-exiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Normal exiting or process.exitCode exiting
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="jest-cli-script-tester">Jest CLI Script Tester</h1>
+<p>CLI Script Tester exists for running Jest against script files that have been written to not have module.exports.
+This is not just a wrapper that calls spawn and has a limited ability to influence the script. This is a combination of transformer
+and script wrapper that will make it so that you can run your script in the jest process with mocks and hooks that track how the 
+process was supposed to exit.</p>
+<h2 id="simple-example">Simple Example</h2>
+<p>Example bin script (synchronous):</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// @CLITestTransform</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">arg3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mf">2</span><span class="p">]</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;we did something with arg3&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>Example bin script (asynchronous):</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// @CLITestTransform</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">someAsyncFnc</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;module&#39;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">arg3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mf">2</span><span class="p">]</span>
+
+<span class="k">async</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">someAsyncFunc</span><span class="p">()</span>
+
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;we did something with arg3&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="ow">void</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span>
+</code></pre></div>
+<p>A basic example jest file (using <code>jest-chain-transform</code>, <code>ts-jest</code> and this library):</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getEcmaVersionFromTsConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@hanseltime/jest-cli-tester&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">TS_CONFIG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;tsconfig.json&#39;</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">transform</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;\\.[jt]sx?$&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s1">&#39;jest-chain-transform&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">transformers</span><span class="o">:</span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;ts-jest&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nx">tsconfig</span><span class="o">:</span><span class="w"> </span><span class="nx">TS_CONFIG</span><span class="p">,</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;@hanseltime/jest-cli-tester/transform&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">              </span><span class="nx">ecmaVersion</span><span class="o">:</span><span class="w"> </span><span class="nx">getEcmaVersionFromTsConfig</span><span class="p">(</span><span class="nx">TS_CONFIG</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>And a basic jest test would look like:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">logSpy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">jest</span><span class="p">.</span><span class="nx">spyOn</span><span class="p">(</span><span class="nx">console</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">cliRunner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CLIRunner</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">throwProcessErrors</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="nx">it</span><span class="p">(</span><span class="s1">&#39;logs&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Resolve it here since the runner doesn&#39;t know what context to resolve from</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">scriptPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;../bin/myScript&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">// Verify the process ended by calling process.exit()</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">scriptPath</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--someArg&#39;</span><span class="p">])).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">&#39;process.exit()&#39;</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">// Ensure the log was made by checking the spy</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">logSpy</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s1">&#39;we did something with arg3&#39;</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div>
+<h2 id="how-it-works">How it works</h2>
+<p>At a high-level, this library uses a transformer to wrap any cli script entrypoint files that are required by the CLIRunner into a module
+with specific exports.</p>
+<ol>
+<li>Jest Transform process</li>
+<li><code>jest-chain-transform</code> should orchestrate actual transforms</li>
+<li><code>&lt;Your normal transformer&gt;</code> is called first to generate transformed javascript</li>
+<li>
+<p><code>@hanseltime/jest-cli-tester/transform</code> is called</p>
+<ol>
+<li>The file name is evaluated against the <code>cliScripts</code> option or the src is searched for <code>// @CLITestTransform</code> at the top</li>
+<li>If the file is a match from above, the transform inserts:<ol>
+<li>a module wrapper + hooks for running the file into source</li>
+<li>a "throw any process exit errors" function call in any catches</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>During a test, a script run involves:</p>
+</li>
+<li>Declaring a CLIRunner that keeps track of hooks for standard process calls</li>
+<li>Passing the resolved path of the script to load</li>
+<li>Loading the resolved path and all of its dependencies in isolation (i.e. <code>jest.isolateModules</code>)<ol>
+<li>The load triggers the above transform process</li>
+</ol>
+</li>
+<li>Providing global functions for Promises, process.exit(), and process.argv that allow us to track process.exit calls</li>
+<li>The loaded module is then run via it's wrapping function and the result is reported back from <code>run()</code></li>
+</ol>
+<p>If you would like more nuanced notes on some of the system, see <a href="DESIGN/">Design</a>.</p>
+<h2 id="installation">Installation</h2>
+<p>You will need <code>jest-chain-transform</code>, <code>@hanseltime/jest-cli-test</code> and your base transformer of choice (i.e. babel-jest, ts-jest).</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># For ts-jest</span>
+yarn<span class="w"> </span>add<span class="w"> </span>--dev<span class="w"> </span>jest-chain-transform<span class="w"> </span>@hanseltime/jest-cli-test<span class="w"> </span>ts-jest
+
+<span class="c1"># For babel-jest - babel-jest is already included</span>
+yarn<span class="w"> </span>add<span class="w"> </span>--dev<span class="w"> </span>jest-chain-transform<span class="w"> </span>@hanseltime/jest-cli-test
+</code></pre></div>
+<p>Once you have installed the correct packages, you will need to update your jest config file (we recommend using a .js config file), to chain transforms:</p>
+<p>If using ts-jest:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// jest.config.js</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getEcmaVersionFromTsConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;@hanseltime/jest-cli-tester&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">TS_CONFIG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;tsconfig.json&#39;</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">transform</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;\\.[jt]sx?$&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s1">&#39;jest-chain-transform&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">transformers</span><span class="o">:</span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;ts-jest&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="c1">// You HAVE to keep comments if you want to use @CLITestTransform comment</span>
+<span class="w">              </span><span class="nx">tsconfig</span><span class="o">:</span><span class="w"> </span><span class="nx">TS_CONFIG</span><span class="p">,</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;@hanseltime/jest-cli-tester/transform&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">              </span><span class="nx">ecmaVersion</span><span class="o">:</span><span class="w"> </span><span class="nx">getEcmaVersionFromTsConfig</span><span class="p">(</span><span class="nx">TS_CONFIG</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>If using babel-jest:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// jest.config.js</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">transform</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;\\.[jt]sx?$&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s1">&#39;jest-chain-transform&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">transformers</span><span class="o">:</span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;babel-jest&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">              </span><span class="c1">// You HAVE to keep comments if you want to use @CLITestTransform comment</span>
+<span class="w">              </span><span class="c1">// Either - only keep the targeted comment if found</span>
+<span class="w">              </span><span class="nx">shouldPrintComment</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">c</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nx">c</span><span class="p">.</span><span class="nx">trim</span><span class="p">().</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;@CLITestTransform&#39;</span><span class="p">)</span>
+<span class="w">              </span><span class="p">},</span>
+<span class="w">              </span><span class="c1">// OR - just keep all comments</span>
+<span class="w">              </span><span class="nx">comments</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;@hanseltime/jest-cli-tester/transform&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">              </span><span class="c1">// TODO: we don&#39;t yet have a function for interpolating this - jest preset detects</span>
+<span class="w">              </span><span class="c1">// what the current node version supports so you can choose a number close to that</span>
+<span class="w">              </span><span class="nx">ecmaVersion</span><span class="o">:</span><span class="w"> </span><span class="mf">2018</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="marking-your-bin-files-for-testing">Marking your bin files for testing</h2>
+<p>You have 2 options for designating that your CLI script should be transformed for testing with the CLIRunner.</p>
+<h3 id="1-annotated-comment-preferred">1 Annotated Comment (Preferred)</h3>
+<p><strong>Important:</strong> Since our transform is getting piped transformations from <code>babel-jest</code> or <code>ts-jest</code> you need to make sure that you preserve the comments during that transform.  Without it, you will get errors saying
+that you are trying to run a script that wasn't transformed.</p>
+<p>You can easily prepare your script for testing via the CLIRunner by simply adding this comment at the top of your CLI file:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// @CLITestTransform</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">something</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;something&#39;</span>
+
+<span class="nx">something</span><span class="p">()</span>
+</code></pre></div>
+<p>Then as long as you use the CLIRunner, your file will have the necessary stubs transformed into it.</p>
+<h3 id="2-regex-configuration">2 Regex configuration</h3>
+<p>You can configure which scripts should be transformed as cli-scripts by adding the cliScripts transform option.</p>
+<p>NOTE: this opens the door for other scripts to accidentally get transformed if you make your regex too wide and makes it less explicit for people viewing a CLI script to know if it is meant to be tested.  However, if
+you need to keep comments off, then you can use this.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// jest.config.js</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">transform</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;\\.[jt]sx?$&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s1">&#39;jest-chain-transform&#39;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">transformers</span><span class="o">:</span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;ts-jest&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="c1">// You HAVE to keep comments if you want to use @CLITestTransform comment</span>
+<span class="w">              </span><span class="nx">tsconfig</span><span class="o">:</span><span class="w"> </span><span class="nx">TS_CONFIG</span><span class="p">,</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="c1">// Use the cliTransformer that should have been transpiled before this call</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s1">&#39;@hanseltime/jest-cli-tester/transform&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">              </span><span class="nx">ecmaVersion</span><span class="o">:</span><span class="w"> </span><span class="nx">getEcmaVersionFromTsConfig</span><span class="p">(</span><span class="nx">TS_CONFIG</span><span class="p">),</span>
+<span class="w">              </span><span class="nx">cliScripts</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="c1">// IMPORTANT - you need a string if you are going to run with more than 1 worker</span>
+<span class="w">                </span><span class="sr">/.*\/src\/bin\/my-bin-file.ts/</span><span class="p">.</span><span class="nx">source</span>
+<span class="w">              </span><span class="p">]</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="source-map-support">Source Map support</h3>
+<p>Depending on your transform, if you would like to debug with source mapping, you will need to make sure that
+whatever transpiler you use (ts-jest or babel-jest), creates inline source code comments.  If you do not have
+these, this transformer will still work, but it cannot accurately update the source maps since it only
+reads them from comments in the source code provided.</p>
+<h2 id="usage-discussion">Usage Discussion</h2>
+<p>The core concept behind this library is the CLIRunner. It essentially preps your cli script as a node.js module for execution (and wraps it into a module export with the transformer so that it can run it in the jest context).</p>
+<p>You can create a number of CLIRunner instances for the sake of having particular tester configurations. Note, every run will reset the module loading of the test so that we can re-run just like a fresh load (but mocks will be preserved :D).</p>
+<p>CLIRunner will stub out different non-standard process returns:</p>
+<ul>
+<li>process.exit()</li>
+<li>process.abort()</li>
+</ul>
+<p>The returns will be thrown as an error. (Don't worry! We inject a handler into each catch and finally block in the entrypoint file so that these specific messages are thrown through).</p>
+<p>The error messages are the equivalent to a call to the same process function.</p>
+<h3 id="known-processexit-limitation">Known process.exit limitation</h3>
+<p>The current state of the CLI transformer is that it only performs the correct transform to throw <code>process.exit()</code> calls through catches
+within the entrypoint script. So if you would like to test importing some function that calls <code>process.exit</code> within any catches or finally's,
+you will get erratic behavior.</p>
+<p>In general, it's a bad idea to have a non-entrypoint script perform a process.exit, so it feels like a fair compromise to reqeust that
+the developer makes sure to propagate errors from imported files to 
+the top-level and then call process.exit() there.</p>
+<p>If you would like to test a process.exit in imported files, please submit an issue to this repository, detailing your case.</p>
+<h3 id="the-throwprocesserrors-option">The throwProcessErrors option</h3>
+<p>By default, we continue to throw our process.exit() and process.abort errors. This has proven to be tedious to keep up however.</p>
+<p>Now you can set the <code>throwProcessErrors: false</code> option on your CLIRunner and simply expect the string output that would match the expected thrown Error.</p>
+<h3 id="example-throwprocesserrors-false">$ Example (throwProcessErrors = false):</h3>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">cliRunner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CLIRunner</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">throwProcessErrors</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="nx">jest</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="s1">&#39;Some Imported mock in my runner scripts&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// We can mock any imports here and test them!</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;something&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">myCLIScript</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;./cli&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// relative paths NEED to be resolved from their relative location</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should run with these args&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// This assumes we naturally let the script end</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">myCLIScript</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--flag1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;--opt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;anOption&#39;</span><span class="p">])).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="kc">null</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should called process.exit() - still good outcome&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// This is when someone calls process.exit() - a good completion but sudden stop</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">myCLIScript</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--flag1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;--opt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;anOption2&#39;</span><span class="p">])).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">eql</span><span class="p">(</span><span class="s1">&#39;process.exit()&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should fail with bad opt&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">myCLIScript</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--flag1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;--opt&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;anOption3&#39;</span><span class="p">])).</span><span class="nx">to</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">eql</span><span class="p">(</span><span class="s1">&#39;process.exit(13)&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div>
+<h3 id="example-throwprocesserrors-true">Example (throwProcessErrors = true):</h3>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">cliRunner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">CLIRunner</span><span class="p">()</span>
+
+<span class="nx">jest</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="s1">&#39;Some Imported mock in my runner scripts&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// We can mock any imports here and test them!</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;something&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">myCLIScript</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;./claim-job&#39;</span><span class="p">)</span><span class="w"> </span><span class="c1">// relative paths NEED to be resolved from their relative location</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should run with these args&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// This assumes we naturally let the script end</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">myCLIScript</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--org&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;2092302&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;bubububub&#39;</span><span class="p">])</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should called process.exit() - still good outcome&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// This is when someone adds process.exit() - a good completion but sudden stop</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">expect</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">myCLIScript</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--org&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;20923045&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fufufufuf&#39;</span><span class="p">]))</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">rejects</span><span class="p">.</span><span class="nx">toThrow</span><span class="p">(</span><span class="s1">&#39;process.exit()&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should fail with new run though&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">expect</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">myCLIScript</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--org&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;20923045&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fufufufuf&#39;</span><span class="p">]))</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">rejects</span><span class="p">.</span><span class="nx">toThrow</span><span class="p">(</span><span class="s1">&#39;process.exit(13)&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div>
+<h3 id="normal-exiting-or-processexitcode-exiting">Normal exiting or process.exitCode exiting</h3>
+<p>If your CLI script does no explicitly call process.exit() and relies on exiting normally, a <code>CLIRunner</code> will return either:</p>
+<ol>
+<li>null if we finished the script with no process.exitCode set</li>
+<li><code>"&lt;code&gt;"</code> if process.exitCode was set</li>
+</ol>
+<p>When asserting for this, you would do something like:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should finish normally&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">myCLIScript</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--org&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;20923045&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fufufufuf&#39;</span><span class="p">])).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">  </span><span class="p">})</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should finish with exitCode&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">cliRunner</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">myCLIScript</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;--org&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;20923045&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;fufufufuf&#39;</span><span class="p">])).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">&quot;33&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">})</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy", "content.code.select", "toc.follow", "navigation.top", "navigation.tabs", "navigation.tracking"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.f13b1293.min.js"></script>
+      
+    
+  </body>
+</html>
