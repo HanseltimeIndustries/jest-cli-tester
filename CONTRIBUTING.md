@@ -10,10 +10,6 @@ make sure to be respectful of fellow users and developers.
     - [Development setup](#development-setup)
     - [Commit syntax](#commit-syntax)
     - [Development Testing](#development-testing)
-      - [Unit tests](#unit-tests)
-      - [Linting](#linting)
-      - [Typescript](#typescript)
-      - [Optional - Testing built script locally](#optional---testing-built-script-locally)
       - [Optional - Personal CI checks](#optional---personal-ci-checks)
       - [Optional - Debugging](#optional---debugging)
   
@@ -64,56 +60,7 @@ particular angular commits trigger a release:
 
 ### Development Testing
 
-#### Unit tests
-
-We run unit tests through [jest](https://jestjs.io/).  New functionality should be accompanied by new tests for the paths that
-this logic creates.
-
-```
-// Alias for running jest
-yarn test
-
-// Example only running the named test file
-yarn test import-resources-to-stack 
-```
-
-Our unit tests should mock all outbound client libraries and simply focus program logical paths.
-
-#### Linting
-
-We make use of [eslint](https://eslint.org/eslint) and [prettier](https://prettier.io/) to ensure formatting and additional lint rules.
-
-You can run:
-
-```shell
-yarn lint --fix
-```
-
-To automatically change any immediately fixable problems and see the others reported.
-
-Additionally, it is recommended that you integrate eslint IDE support for better visibility while writing the code.
-
-#### Typescript
-
-We use typescript to compile our projects to .js.  Be sure that your builds pass when you run `yarn build` and your `dist` and `dist-bin` folder 
-is populated.
-
-#### Optional - Testing built script locally
-
-If you have made a change to a bin script and would like to test some local calls to the package as an installed package, you can do the following:
-
-```shell
-#In a shell that has yarn install
-yarn build
-
-# In a shell that is new
-cd <out of the folder to avoid package.json reading>
-npm install -g <path to project>
-
-<bin script> <args>
-```
-
-You can run the install again and again after building.
+See [Development](./DEVELOPMENT.md)
 
 #### Optional - Personal CI checks
 

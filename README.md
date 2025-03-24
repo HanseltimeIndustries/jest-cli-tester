@@ -1,11 +1,5 @@
-# aws-cfn-console-import
+# CLI Script Tester
 
-TODO - insert your summary here
+[Raw docs](./docs/)
 
-<!-- TODO: inserver your table of contents with  VSCode Markdown All In One extension -->
-  
-*Table of Contents generated with VSCode Markdown All In One extension*
-
-# Usage
-
-TODO - insert usage
+[Github Pages](https://hanseltimeindustries.github.io/jest-cli-tester)

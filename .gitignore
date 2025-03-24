@@ -9,7 +9,14 @@
 # Documentation here: https://yarnpkg.com/features/zero-installs
 # !.yarn/cache
 .pnp.*
+node_modules
 
 dist/
-dist-bin/
-node_modules/
+tmp/
+
+# swc tooling
+.swc/
+.swcrc_from_tsconfig*
+
+# mkdocs site generation for local dev
+site/

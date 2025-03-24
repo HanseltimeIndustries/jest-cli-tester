@@ -39,7 +39,7 @@ jobs:
           if [[ "${{ github.base_ref }}" != "" ]]; then
             echo "Setting up git environment for commitlint of pull request"
             git fetch origin ${{ github.base_ref }}
-            git fetch origin ${{ github.head_ref }}
+            git fetch ${{ github.event.pull_request.head.repo.clone_url }} ${{ github.head_ref }}
             yarn commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
           else
             echo "Setting up git environment for commitlint of branch push"
@@ -52,14 +52,100 @@ jobs:
       - name: linting
         run: |
           yarn lint
+      - name: formatting
+        run: |
+          yarn format
       - name: testing
         run: |
           yarn test
-      # Uncomment this if you are setting up binary scripts
-      # - name: Make sure binary is accessible
-      #   run: |
-      #     packageDir=${PWD##*/}
-      #     cd ../
-      #     npm install -g ./${packageDir} --ignore-scripts
-      #     echo "Running script to ensure valid help dispaly"
-      #     aws-cfn-console-import --help
+  pkg-test:
+    needs:
+      - ci-checks
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x, 20.x]
+        # mac runners seem to stall too often - leaving off and assuming unix works well
+        os: ['ubuntu-latest', 'windows-latest']
+        pkgManager: ['yarn-v1', 'yarn-berry', 'pnpm', 'npm']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache-dependency-path: yarn.lock
+      - name: install
+        run: |
+          npm install --force -g corepack@>=0.31.0
+          corepack enable
+          yarn install --immutable
+      - name: build
+        run: |
+          yarn build
+      - id: pkgtest-setup
+        uses: hanseltimeindustries/pkgtest-setup-action@v1
+      - name: pkgtest ${{ matrix.pkgManager }}
+        env:
+          CI_FIX: "true"
+        run: |
+          # This avoids yarnv1 level failures due to global cache lock issues
+          # Just preps by filling the cache in a synchronous manner
+          # No need to clean up since the container will do that on close
+          yarn pkgtest -p 1 --noYarnv1CacheClean --pkgManager ${{ matrix.pkgManager }} --collectLogFilesOn error --collectLogFilesStage tests --onWindowsProblems skip
+        # Collect any logs from the --collectLogFilesOn error to troubleshoot failures
+      - name: Archive logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkgtest-log-files-${{ matrix.pkgManager }}-${{ matrix.os }}-${{ matrix.node-version }}
+          path: ${{ steps.pkgtest-setup.outputs.collect_log_file_folder }}
+          retention-days: 1
+          include-hidden-files: true
+  ensure-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO: caching this action would accelerate the run
+      - name: corepack
+        run: |
+          corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+      - name: install
+        run: |
+          yarn install --immutable
+          # Hack - the yarn team refuses to not take over formatting the package.json
+          git checkout package.json
+      - name: generate typedoc
+        run: |
+          yarn typedoc
+      - name: ensure no uncommitted docs
+        shell: bash
+        run: |
+          git diff
+          changes=$(git status --porcelain=v1 2>/dev/null)
+          if [ ! -z "$changes" ]; then
+              echo "Found typedoc generated files that weren't commited!"
+              echo "Please run 'yarn typedoc', and commit the files"
+              echo "$changes"
+              exit 1
+          fi
+      - name: ensure no errors with mkdocs
+        run: |
+          pip install -r docs/requirements.txt
+          mkdocs build --strict
+  # easy to require end cap job
+  done:
+    needs:
+      - ensure-docs
+      - ci-checks
+      - pkg-test
+    runs-on: ubuntu-latest
+    name: Done
+    steps:
+      - run: exit 1
+        if: ${{ always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'skipped') || contains(needs.*.result, 'cancelled')) }}
